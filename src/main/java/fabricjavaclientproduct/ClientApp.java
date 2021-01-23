@@ -34,26 +34,26 @@ public class ClientApp {
 
 			byte[] result;
 
-			contract.submitTransaction("addNewProduct", "4", "Product4", "10", "Pharmacy2", "120", "04.04.2020",
-					"01.02.2050", "on sale", "Pharmacy2", "03.04.2020");
+			contract.submitTransaction("addNewProduct", "Pharmacy2_Product4_03.04.2020", "Product4_03.04.2020","Product", "100",  "12$", "04.04.2020",
+					"01.02.2050", "on sale", "Pharmacy2", "03.04.2020", "");
 
-			result = contract.evaluateTransaction("queryProductById", "4");
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
 			System.out.println(new String(result));
 
-			contract.submitTransaction("changeProductOwnership", "4", "Pharmacy3");
+			contract.submitTransaction("changeProductOwnership", "Pharmacy2_Product4_03.04.2020", "Pharmacy3");
 
-			result = contract.evaluateTransaction("queryProductById", "4");
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
 			System.out.println(new String(result));
 
 			System.out.println("worked");
 
-			System.out.println(new String(contract.submitTransaction("deleteProduct", "4")));
+			System.out.println(new String(contract.submitTransaction("deleteProduct", "Pharmacy2_Product4_03.04.2020")));
 
 			System.out.println("deleting worked");
 
-			result = contract.evaluateTransaction("purchaseSomeProduct", "3", "Pharmacy3", "7");
+			result = contract.evaluateTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3", "7");
 			System.out.println(new String(result));
-			result = contract.evaluateTransaction("queryProductById", "3");
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy1_AUGBID_01.01.2021");
 			System.out.println(new String(result));
 
 			System.out.println("purchase worked");
