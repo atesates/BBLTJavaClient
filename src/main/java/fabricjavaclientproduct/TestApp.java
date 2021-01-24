@@ -35,13 +35,13 @@ public class TestApp {
 			byte[] result;
 			
 
-			for (int i = 16; i < 26; i++) {
+			for (int i = 1; i < 11; i++) {
 				long start = System.currentTimeMillis();
 				System.out.println("  step: " +  i);
 				Integer x = i;
-				  contract.submitTransaction("addNewProduct",  x.toString(), "Product", "10", "Adnan", 
-						  "120", "04.04.2020","01.02.2050" ,"on sale", "Pharmacy2", "03.04.2020");
-				  
+				contract.submitTransaction("addNewProduct", x.toString(), "Product4_03.04.2020",
+						"Product", "Pharmacy1","100", "12", "04.04.2030", "01.02.2020", "on sale", "03.04.2020", "Pharmacy2", "");
+
 				result = contract.evaluateTransaction("queryProductById", x.toString());
 				long elapsed = System.currentTimeMillis() - start;
 				System.out.println(new String(result));

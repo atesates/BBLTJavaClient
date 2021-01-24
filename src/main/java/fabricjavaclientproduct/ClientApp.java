@@ -34,46 +34,32 @@ public class ClientApp {
 
 			byte[] result;
 
-			/*
-			 * contract.submitTransaction("addNewProduct", "Pharmacy2_Product4_03.04.2020",
-			 * "Product4_03.04.2020","Product", "100", "12$", "04.04.2020", "01.02.2050",
-			 * "on sale", "Pharmacy2", "03.04.2020", "");
-			 * 
-			 * result = contract.evaluateTransaction("queryProductById",
-			 * "Pharmacy2_Product4_03.04.2020"); System.out.println(new String(result));
-			 */
+			contract.submitTransaction("addNewProduct", "Pharmacy2_Product4_03.04.2020", "Product4_03.04.2020",
+					"Product", "Pharmacy1","100", "12", "04.04.2030", "01.02.2020", "on sale", "03.04.2020", "Pharmacy2", "");
 
-			
-			/*
-			 * contract.submitTransaction("changeProductOwnership",
-			 * "Pharmacy2_Product4_03.04.2020", "Pharmacy3");
-			 * 
-			 * result = contract.evaluateTransaction("queryProductById",
-			 * "Pharmacy2_Product4_03.04.2020"); System.out.println(new String(result));
-			 * 
-			 * System.out.println("worked");
-			 */
-			  
-				
-			/*
-			 * System.out.println(new String(contract.submitTransaction("deleteProduct",
-			 * "Pharmacy2_Product4_03.04.2020")));
-			 * 
-			 * System.out.println("deleting worked");
-			 */
-				  
-					
-					  result = contract.evaluateTransaction("purchaseSomeProduct",
-					  "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3", "7"); 
-					  System.out.println(new String(result)); 
-						/*
-						 * result = contract.evaluateTransaction("queryProductById",
-						 * "Pharmacy1_AUGBID_01.01.2021"); System.out.println(new String(result));
-						 */
-					  System.out.println("purchase worked");
-					 
-				 
-			 
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
+			System.out.println(new String(result));
+
+			contract.submitTransaction("changeProductOwnership", "Pharmacy2_Product4_03.04.2020", "Pharmacy3");
+
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
+			System.out.println(new String(result));
+
+			System.out.println("worked");
+
+			System.out
+					.println(new String(contract.submitTransaction("deleteProduct", "Pharmacy2_Product4_03.04.2020")));
+
+			System.out.println("deleting worked");
+
+			result = contract.evaluateTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3",
+					"7");
+			System.out.println(new String(result));
+
+			result = contract.evaluateTransaction("queryProductById", "Pharmacy1_AUGBID_01.01.2021");
+			System.out.println(new String(result));
+
+			System.out.println("purchase worked");
 
 		}
 	}
