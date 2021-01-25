@@ -33,18 +33,47 @@ public class TestApp {
 			Contract contract = network.getContract("ProductTransfer");
 
 			byte[] result;
-			
-
-			for (int i = 1; i < 11; i++) {
-				long start = System.currentTimeMillis();
-				System.out.println("  step: " +  i);
+			System.out.println("10  step: " );
+			long starting = System.currentTimeMillis();
+		    Integer ContractException = 0;
+		    Integer TimeoutException = 0;
+		    Integer InterruptedException = 0;
+		    Integer GatewayRuntimeException = 0;
+		
+			for (int i = 111; i < 121; i++) {
+				//long start = System.currentTimeMillis();
+				//System.out.println("  step: " +  i);
 				Integer x = i;
-				contract.submitTransaction("addNewProduct", x.toString(), "Product4_03.04.2020",
-						"Product", "Pharmacy1","100", "12", "04.04.2030", "01.02.2020", "on sale", "03.04.2020", "Pharmacy2", "");
-
-				result = contract.evaluateTransaction("queryProductById", x.toString());
-				long elapsed = System.currentTimeMillis() - start;
-				System.out.println(new String(result));
+				
+				//contract.submitTransaction("addNewProduct", x.toString(), "Product4_03.04.2020",
+						//"Product", "Pharmacy1","100", "12", "04.04.2030", "01.02.2020", "on sale", "03.04.2020", "Pharmacy2", "");
+				try {
+					contract.submitTransaction("purchaseSomeProduct", x.toString(), "Pharmacy3","1");
+				}catch(Exception ex ){
+					if(ex.getClass().toString()== "ContractException") {
+						ContractException++;
+					}
+					else if(ex.getClass().toString()== "TimeoutException") {
+						TimeoutException++;
+					}
+					else if(ex.getClass().toString()== "InterruptedException") {
+						InterruptedException++;
+					}
+					else if(ex.getClass().toString()== "GatewayRuntimeException"){
+						GatewayRuntimeException++;
+					}
+					System.out.println(new String(ex.toString()));
+					
+				}
+				
+				
+				
+				finally {}
+				
+				//contract.submitTransaction("changeProductOwnership", x.toString(), "Ates");
+				//result = contract.evaluateTransaction("queryProductById", x.toString());
+				//long elapsed = System.currentTimeMillis() - start;
+				//System.out.println(new String(result));
 				//long startChanged = System.currentTimeMillis();
 				
 				
@@ -58,11 +87,16 @@ public class TestApp {
 				 * System.currentTimeMillis() - startChanged;
 				 */
 				
-				System.out.println("  duration: " + elapsed);
-				System.out.println(" ---------------------------------------------------------------------");
+				//System.out.println("  duration: " + elapsed);
+				//System.out.println(" ---------------------------------------------------------------------");
 			}
-
+			long elapsed = System.currentTimeMillis() - starting;
+			System.out.println("duration: " + elapsed + " ms.");
+			System.out.println("ContractException: " + ContractException );
+			System.out.println("TimeoutException: " + TimeoutException );
+			System.out.println("InterruptedException: " + InterruptedException );
+			System.out.println("GatewayRuntimeException: " + GatewayRuntimeException );
 		}
-		System.out.println("             *** The End ***              " );
+		System.out.println("  *** The End ***  " );
 	}
 }

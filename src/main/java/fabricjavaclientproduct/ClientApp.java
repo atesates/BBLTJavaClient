@@ -52,7 +52,7 @@ public class ClientApp {
 
 			System.out.println("deleting worked");
 
-			result = contract.evaluateTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3",
+			result = contract.submitTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3",
 					"7");
 			System.out.println(new String(result));
 
