@@ -9,12 +9,19 @@ import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
 
+import ilog.concert.IloNumVar;
+import ilog.cplex.IloCplex;
+
 public class ClientApp {
 	static {
 		System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
 	}
 
 	public static void main(String[] args) throws Exception {
+		
+		IloCplex model = new IloCplex();
+
+		IloNumVar[] x = new IloNumVar[2];
 		// Load a file system based wallet for managing identities.
 		Path walletPath = Paths.get("wallet");
 		Wallet wallet = Wallets.newFileSystemWallet(walletPath);
