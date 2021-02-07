@@ -51,10 +51,11 @@ public class ClientApp {
 	}
 
 	public static void main(String[] args) throws Exception {
+		System.out.println("main is running");
 		double[][] B = convertToDouble2DArray("{{4, 2, 2, 4}, {3, 4, 5, 6}, {6, 7, 8, 9}, {3, 2, 1, 4}}");
-		System.out.println(B);
+		// System.out.println(B);
 		double[] X = convertToDoubleArray("2,3,4");
-		System.out.println(X);
+		// System.out.println(X);
 		IloCplex model = new IloCplex();
 
 		IloNumVar[] x = new IloNumVar[2];
@@ -77,33 +78,43 @@ public class ClientApp {
 
 			byte[] result;
 
+			System.out.println("add new product method starting...");
 			contract.submitTransaction("addNewProduct", "Pharmacy2_Product4_03.04.2020", "Product4_03.04.2020",
 					"Product", "Pharmacy1", "100", "12", "04.04.2030", "01.02.2020", "on sale", "03.04.2020",
 					"Pharmacy2", "");
 
 			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
 			System.out.println(new String(result));
+			System.out.println("add new product method worked.");
 
+			System.out.println("change owner method starting...");
 			contract.submitTransaction("changeProductOwnership", "Pharmacy2_Product4_03.04.2020", "Pharmacy3");
 
 			result = contract.evaluateTransaction("queryProductById", "Pharmacy2_Product4_03.04.2020");
 			System.out.println(new String(result));
 
-			System.out.println("worked");
-
+			System.out.println("change owner method worked.");
+			System.out.println("delete method starting...");
 			System.out
 					.println(new String(contract.submitTransaction("deleteProduct", "Pharmacy2_Product4_03.04.2020")));
 
-			System.out.println("deleting worked");
-
-			result = contract.submitTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3", "7");
+			System.out.println("deleting method worked.");
+			System.out.println("purchase method starting...");
+			result = contract.submitTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3", "1");
 			System.out.println(new String(result));
 
 			result = contract.evaluateTransaction("queryProductById", "Pharmacy1_AUGBID_01.01.2021");
 			System.out.println(new String(result));
 
-			System.out.println("purchase worked");
+			System.out.println("purchase method worked.");
 
+			System.out.println("cplex method starting...");
+
+			result = contract.submitTransaction("solveMyModel", "3", "4", "41,35,96",
+					"{{2, 3, 7}, {1, 1, 0}, {5, 3, 0}, {0.6, 0.25, 1}}", "1250,250,900,232.5");
+			System.out.println(new String(result));
+
+			System.out.println("cplex method worked.");
 		}
 	}
 }
