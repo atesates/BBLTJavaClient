@@ -99,6 +99,7 @@ public class ClientApp {
 					.println(new String(contract.submitTransaction("deleteProduct", "Pharmacy2_Product4_03.04.2020")));
 
 			System.out.println("deleting method worked.");
+
 			System.out.println("purchase method starting...");
 			result = contract.submitTransaction("purchaseSomeProduct", "Pharmacy1_AUGBID_01.01.2021", "Pharmacy3", "1");
 			System.out.println(new String(result));
@@ -110,7 +111,7 @@ public class ClientApp {
 
 			System.out.println("cplex method starting...");
 
-			result = contract.submitTransaction("solveMyModel", "3", "4", "41,35,96",
+			result = contract.submitTransaction("solveMyModel", "Pharmacy1_AUGBID_01.01.2021", "3", "4", "41,35,96",
 					"{{2, 3, 7}, {1, 1, 0}, {5, 3, 0}, {0.6, 0.25, 1}}", "1250,250,900,232.5");
 			System.out.println(new String(result));
 
