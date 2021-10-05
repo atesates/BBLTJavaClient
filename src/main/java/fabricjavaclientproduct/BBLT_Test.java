@@ -14,73 +14,88 @@ import java.util.List;
 import ilog.concert.*;
 import ilog.cplex.*;
 
-public class BBLT_Test8 {
+public class BBLT_Test {
 
 	public static void main(String[] args) {
 
-		int n = 196000;
-		int m = 420;//edges, equations
-		//double[] c = { 41, 35, 9, 11, 25, 96, 71, 35, 9, 111, 25, 6 };//object function also distances between nodes product decisions variables
-		double[] c = new double[n];
-		for (int i = 0; i < n; i++) {
-			  c[i] = 10*i;
+		int numberOf_sum_of_products= 12250;
+		int numberOf_right_side_of_equations = 250;//edges, equations
+		int numberOf_product = 5;
+		//double[] sum_of_products= { 41, 35, 9, 11, 25, 96, 71, 35, 9, 111, 25, 6 };//object function also distances between nodes product decisions variables
+		double[] sum_of_products = new double[numberOf_sum_of_products];
+		for (int i = 0; i < numberOf_sum_of_products; i++) {
+			sum_of_products[i] = 10*i;
 		}
 //		System.out.print("c={");
-//		for (int i = 0; i < n; i++) {
+//		for (int i = 0; i < numberOf_sum_of_products; i++) {
 //			  System.out.print(c[i]);
 //			  System.out.print(',');
 //		}
 //		System.out.println("}");
-		//double[][] A = { { 1,   1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0 }, 
-		//				 { 0,   1,   1,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
-		//				 { 0,   0,   1,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
-		//				 { 0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   0 },
-		//				 { 1,   1,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0 },
-		//				 { 1,   0,   0,   1,   0,   0,   0,   0,   0,   1,   1,   1 },
-		//				 { 0,   0,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
-		//				 { 1,   0,   1,   1,   1,   1,   0,   1,   0,   1,   0,   0 }, 
-		//				 { 1,   1,   1,   0,   0,   1,   0,   0,   0,   1,   0,   0 }, 
-		//				 { 0,   1,   0,   1,   0,   0,   0,   0,   0,   1,   0,   0 }, 
-		//				 { 1,   1,   0,   1,   0,   1,   0,   1,   0,   0,   1,   0 },
-		//				 { 1,   0,   1,   0,   1,   0,   0,   1,   0,   0,   0,   1 }};
-		double[][] A = new double[m][n];
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				if(i > j && i < 2*j)
-					A[i][j]= 1;
+//		double[][] A = { { 1,   1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0 }, 
+//						 { 0,   1,   1,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
+//						 { 0,   0,   1,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
+//						 { 0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   0 },
+//						 { 0,   0,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0 },
+//						 { 1,   0,   0,   1,   0,   0,   0,   0,   0,   1,   1,   1 },
+//						 { 0,   0,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0 }, 
+//						 { 1,   0,   1,   1,   1,   1,   0,   1,   0,   1,   0,   0 }, 
+//						 { 1,   1,   1,   0,   0,   1,   0,   0,   0,   1,   0,   0 }, 
+//						 { 0,   1,   0,   1,   0,   0,   0,   0,   0,   1,   0,   0 }, 
+//						 { 1,   1,   0,   1,   0,   1,   0,   1,   0,   0,   1,   0 },
+//						 { 1,   0,   1,   0,   1,   0,   0,   1,   0,   0,   0,   1 }, 
+//						 { 1,   1,   0,   1,   0,   1,   0,   1,   0,   0,   1,   0 },
+//						 { 1,   0,   1,   0,   1,   0,   0,   1,   0,   0,   0,   1 }};
+		double[][][] A = new double[numberOf_right_side_of_equations][numberOf_sum_of_products][numberOf_product];
+		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
+			for (int j = 0; j < numberOf_sum_of_products; j++) {
+				for (int k = 0; k < numberOf_product; k++) {
+				if((numberOf_sum_of_products/3 >= j && i <= numberOf_right_side_of_equations/3)
+					||	((numberOf_sum_of_products*2/3 >= j  && numberOf_sum_of_products/3 < j && i <= numberOf_right_side_of_equations*2/3 && i > numberOf_right_side_of_equations/3 ))
+					||	(numberOf_sum_of_products*2/3 < j  && i > numberOf_right_side_of_equations*2/3 ))
+					A[i][j][k] = 1;
 				else
-					A[i][j]= 0;
+					A[i][j][k] = 0;
+				}
 			}
 		}
 //		System.out.print("A={");
-//		for (int i = 0; i < m; i++) {
+//		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
 //			System.out.print("{");
-//			for (int j = 0; j < n; j++) {
-//				System.out.print(A[i][j]);
-//				System.out.print(", ");
+//			for (int j = 0; j < numberOf_sum_of_products; j++) {
+//				for (int k = 0; k < numberOf_product; k++) {
+//					System.out.print(A[i][j][k]);
+//					System.out.print(", ");
+//				}
 //			}
 //			System.out.print("}");
 //			System.out.println(",");
 //		}		
 //		System.out.println("|");
 		
-		//double[] b = { 50, 20, 100, 200, 100, 250, 300,
-		//		150, 250, 400, 50, 20};//right side of equations
-		double[] b =  new double[m];
-		for (int i = 0; i < m; i++) {
-			  b[i] = 10*i;
+//		double[] right_side_of_equations = { 50, 20, 100, 200, 100, 250, 300,
+//				150, 250, 400, 50, 20};//right side of equations
+		double[] right_side_of_equations =  new double[numberOf_right_side_of_equations];
+		int balance = 1;
+		for (int i = 0; i < numberOf_right_side_of_equations; i++) {			
+			  right_side_of_equations[i] = balance*i;
+			  balance++;
+			  if(i%10 == 0)
+				  balance = 1;//1,4,9,16,25,36,49,64,81,100,11,24
 		}
-//		System.out.print("b={");
-//		for (int i = 0; i < m; i++) {
-//			  System.out.print(b[i]);
+//		System.out.print("right_side_of_equations={");
+//		for (int i = 0; i < numberOf_right_side_of_equationsnumberOf_right_side_of_equations; i++) {
+//			  System.out.print(right_side_of_equations[i]);
 //			  System.out.print(',');
 //		}
 //		System.out.println("}");
-		
-		solveModel(n, m, c, A, b);
+		long starting = System.currentTimeMillis();
+		solveModel(numberOf_sum_of_products, numberOf_right_side_of_equations, numberOf_product, sum_of_products, A, right_side_of_equations);
+		long elapsed = System.currentTimeMillis() - starting;
+		System.out.println("solveModelDuration: " + elapsed + " ms.");
 	}
 
-	public static void solveModel(int n, int m, double[] c, double[][] A, double[] b) {
+	public static void solveModel(int n, int m, int t, double[] c, double[][][] A, double[] b) {
 		try {
 			long starting = System.currentTimeMillis();
 			IloCplex model = new IloCplex();
@@ -101,7 +116,9 @@ public class BBLT_Test8 {
 			for (int i = 0; i < m; i++) {
 				IloLinearNumExpr constraint = model.linearNumExpr();
 				for (int j = 0; j < n; j++) {
-					constraint.addTerm(A[i][j], x[j]);
+					for (int h = 0; h < t; h++) {
+					constraint.addTerm(A[i][j][h], x[j]);
+					}
 				}
 				constraints.add(model.addGe(constraint, b[i]));
 			}
