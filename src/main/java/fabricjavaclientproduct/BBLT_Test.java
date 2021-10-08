@@ -17,18 +17,21 @@ import ilog.cplex.*;
 public class BBLT_Test {
 
 	public static void main(String[] args) {
-
-		int numberOf_sum_of_products= 12250;
-		int numberOf_right_side_of_equations = 250;//edges, equations
-		int numberOf_product = 5;
-		//double[] sum_of_products= { 41, 35, 9, 11, 25, 96, 71, 35, 9, 111, 25, 6 };//object function also distances between nodes product decisions variables
+		
+		int numberOfPharmacy = 50;
+		int numberOfMedicine = 10;
+		
+		int numberOf_sum_of_products= numberOfMedicine*numberOfPharmacy*numberOfPharmacy;//Eczane sayisi x ilac sayisi//minimize 3 sigma//sutun=eczane*eczane*ilac
+		int numberOf_right_side_of_equations = (numberOfPharmacy + numberOfPharmacy)*numberOfMedicine;//edges, equations Eczane sayisi x ilac sayisi//satir=eczane*ilac
+		
+		//double[] sum_of_products= { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };//object function also distances between nodes product decisions variables
 		double[] sum_of_products = new double[numberOf_sum_of_products];
 		for (int i = 0; i < numberOf_sum_of_products; i++) {
 			sum_of_products[i] = 10*i;
 		}
 //		System.out.print("c={");
 //		for (int i = 0; i < numberOf_sum_of_products; i++) {
-//			  System.out.print(c[i]);
+//			  System.out.print(sum_of_products[i]);
 //			  System.out.print(',');
 //		}
 //		System.out.println("}");
@@ -46,27 +49,27 @@ public class BBLT_Test {
 //						 { 1,   0,   1,   0,   1,   0,   0,   1,   0,   0,   0,   1 }, 
 //						 { 1,   1,   0,   1,   0,   1,   0,   1,   0,   0,   1,   0 },
 //						 { 1,   0,   1,   0,   1,   0,   0,   1,   0,   0,   0,   1 }};
-		double[][][] A = new double[numberOf_right_side_of_equations][numberOf_sum_of_products][numberOf_product];
+		double[][] A = new double[numberOf_right_side_of_equations][numberOf_sum_of_products];
 		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
 			for (int j = 0; j < numberOf_sum_of_products; j++) {
-				for (int k = 0; k < numberOf_product; k++) {
 				if((numberOf_sum_of_products/3 >= j && i <= numberOf_right_side_of_equations/3)
 					||	((numberOf_sum_of_products*2/3 >= j  && numberOf_sum_of_products/3 < j && i <= numberOf_right_side_of_equations*2/3 && i > numberOf_right_side_of_equations/3 ))
-					||	(numberOf_sum_of_products*2/3 < j  && i > numberOf_right_side_of_equations*2/3 ))
-					A[i][j][k] = 1;
+					||	(numberOf_sum_of_products*2/3 < j  && i > numberOf_right_side_of_equations*2/3 )) {
+					if(j%4==0)
+						A[i][j]= 1;
+					else
+						A[i][j]= 0;
+					}
 				else
-					A[i][j][k] = 0;
-				}
+					A[i][j]= 0;
 			}
 		}
 //		System.out.print("A={");
 //		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
 //			System.out.print("{");
 //			for (int j = 0; j < numberOf_sum_of_products; j++) {
-//				for (int k = 0; k < numberOf_product; k++) {
-//					System.out.print(A[i][j][k]);
-//					System.out.print(", ");
-//				}
+//				System.out.print(A[i][j]);
+//				System.out.print(", ");
 //			}
 //			System.out.print("}");
 //			System.out.println(",");
@@ -84,18 +87,18 @@ public class BBLT_Test {
 				  balance = 1;//1,4,9,16,25,36,49,64,81,100,11,24
 		}
 //		System.out.print("right_side_of_equations={");
-//		for (int i = 0; i < numberOf_right_side_of_equationsnumberOf_right_side_of_equations; i++) {
+//		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
 //			  System.out.print(right_side_of_equations[i]);
 //			  System.out.print(',');
 //		}
 //		System.out.println("}");
 		long starting = System.currentTimeMillis();
-		solveModel(numberOf_sum_of_products, numberOf_right_side_of_equations, numberOf_product, sum_of_products, A, right_side_of_equations);
+		solveModel(numberOf_sum_of_products, numberOf_right_side_of_equations, sum_of_products, A, right_side_of_equations);
 		long elapsed = System.currentTimeMillis() - starting;
 		System.out.println("solveModelDuration: " + elapsed + " ms.");
 	}
 
-	public static void solveModel(int n, int m, int t, double[] c, double[][][] A, double[] b) {
+	public static void solveModel(int n, int m, double[] c, double[][] A, double[] b) {
 		try {
 			long starting = System.currentTimeMillis();
 			IloCplex model = new IloCplex();
@@ -116,16 +119,29 @@ public class BBLT_Test {
 			for (int i = 0; i < m; i++) {
 				IloLinearNumExpr constraint = model.linearNumExpr();
 				for (int j = 0; j < n; j++) {
-					for (int h = 0; h < t; h++) {
-					constraint.addTerm(A[i][j][h], x[j]);
-					}
+					constraint.addTerm(A[i][j], x[j]);
 				}
-				constraints.add(model.addGe(constraint, b[i]));
+				constraints.add(model.addGe(constraint, b[i]));		
 			}
 
+			for (int i = 0; i < m; i++) {
+				IloLinearNumExpr constraint = model.linearNumExpr();
+				for (int j = 0; j < n; j++) {
+					if(i == j) {
+						constraint.addTerm(A[i][j], x[j]);
+					}					
+				}		
+				constraints.add(model.addEq(constraint, 0));
+			}
+			
 			boolean isSolved = model.solve();
 			if (isSolved) {
 				double objValue = model.getObjValue();
+					System.out.print("Z = ");
+				for (int k = 0; k < n; k++) {
+					System.out.print( model.getValue(x[k]) + ", ");
+				}
+				System.out.println(", ");
 				System.out.println("onb_val = " + objValue);
 				for (int k = 0; k < n; k++) {
 					System.out.println("x[" + (k + 1) + "] = " + model.getValue(x[k]));
