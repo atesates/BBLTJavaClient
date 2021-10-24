@@ -1,13 +1,5 @@
 package fabricjavaclientproduct;
 
-/*Minimize z = 41x1 + 35x2 +96x3
-
-2x1 + 3x2 + 7x3 >= 1250
-1x1 + 1x2 + 0x3 >= 250
-5x1 + 3x2 + 0x3 >= 900
-0.6x1 + 0.25x2 + 1x3 >= 232.5
-x1 >=0, x2>=0, x3 >=0*/
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,15 +10,16 @@ import ilog.cplex.*;
 public class BBLT_Test {
 
 	public static void main(String[] args) {
-		
+		System.out.println("Method is runnining..");
 		int numberOfPharmacy = 50;
-		int numberOfWareHouse = 50;//'n our case it must be same as numberOfPharmacy
-		int numberOfMedicine = 15;
+		int numberOfWareHouse = 50;//in our case it must be same as numberOfPharmacy
+		int numberOfMedicine = 25;
 		
 		int numberOf_sum_of_products= numberOfMedicine * numberOfPharmacy * numberOfWareHouse;//Eczane sayisi x ilac sayisi//minimize 3 sigma//sutun=eczane*eczane*ilac
 		int numberOf_right_side_of_equations = (numberOfWareHouse + numberOfPharmacy) * numberOfMedicine;//edges, equations Eczane sayisi x ilac sayisi//satir=eczane*ilac
-		System.out.println("numberOf_sum_of_products=" + numberOf_sum_of_products);
-		System.out.println("numberOf_right_side_of_equations=" + numberOf_right_side_of_equations);
+		
+//		System.out.println("numberOf_sum_of_products=" + numberOf_sum_of_products);
+//		System.out.println("numberOf_right_side_of_equations=" + numberOf_right_side_of_equations);
 //		double[] objectFunction= { 4, 5, 6, 8, 10, 6, 4, 3, 5, 8, 9, 7, 4, 2, 4,
 //								   4, 5, 6, 8, 10, 6, 4, 3, 5, 8, 9, 7, 4, 2, 4};//object function also distances between nodes product decisions variables
 
@@ -40,6 +33,7 @@ public class BBLT_Test {
 			int randomNum = ThreadLocalRandom.current().nextInt(10, 100 + 1);
 			objectFunction[i] = objectFunction[i - (numberOfWareHouse * numberOfPharmacy)];
 		}
+		System.out.println("objectFunction is in progress..");
 //		System.out.print("c={");
 //		for (int i = 0; i < numberOf_sum_of_products; i++) {
 //			  System.out.print(objectFunction[i]);
@@ -80,7 +74,7 @@ public class BBLT_Test {
 				if(relativIndisOfMedicineInColumn == relativIndisOfMedicineInRow)	{	
 					if(i%(numberOfWareHouse + numberOfPharmacy) < numberOfPharmacy)//1,2,3,4,5   9,10,11,12,13
 					{	
-						if((j+i)%numberOfPharmacy==0)
+						if((j+i)%numberOfPharmacy == 0 && j%(numberOfPharmacy + 1) != 0)
 							A[i][j]= 1;
 						else
 							A[i][j]= 0;
@@ -89,7 +83,8 @@ public class BBLT_Test {
 					{
 						//System.out.println("relativIndisOfWareHouseInMatrix=" + relativIndisOfWareHouseInMatrix);
 						if(j >= ((relativIndisOfWareHouseInMatrix) * numberOfPharmacy) && 
-								j < ((relativIndisOfWareHouseInMatrix + 1) * numberOfPharmacy) )				
+								j < ((relativIndisOfWareHouseInMatrix + 1) * numberOfPharmacy) && 
+								j%(numberOfPharmacy + 1) != 0)				
 							A[i][j]= 1;
 						else
 							A[i][j]= 0;
@@ -102,7 +97,7 @@ public class BBLT_Test {
 				}				
 			}
 		}
-		
+		System.out.println("Model is in progress..");
 //		System.out.println("A={");
 //		for (int i = 0; i < numberOf_right_side_of_equations; i++) {
 //			System.out.print("{");
@@ -137,7 +132,7 @@ public class BBLT_Test {
 				right_side_of_equations[i] = randomNumForWareHouses;
 			}
 		}
-		
+		System.out.println("right_side_of_equations is in progress..");
 
 		
 //		System.out.print("right_side_of_equations={");
@@ -149,6 +144,7 @@ public class BBLT_Test {
 
 		
 		long starting = System.currentTimeMillis();
+		System.out.println("solveModel is in progress..");
 		solveModel(numberOfPharmacy, numberOfWareHouse, numberOfMedicine, objectFunction, A, right_side_of_equations);
 		long elapsed = System.currentTimeMillis() - starting;
 		System.out.println("solveModelDuration: " + elapsed + " ms.");
@@ -186,7 +182,7 @@ public class BBLT_Test {
 				else//6,7,8   14,15,16 
 					constraints.add(model.addLe(constraint, right_side_of_equations[i]));
 			}
-
+			System.out.println("constraint is added..");
 //			for (int i = 0; i < m; i++) {
 //				IloLinearNumExpr constraint = model.linearNumExpr();
 //				for (int j = 0; j < n; j++) {
