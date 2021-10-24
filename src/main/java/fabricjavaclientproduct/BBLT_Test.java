@@ -15,8 +15,8 @@ public class BBLT_Test {
 		int numberOfWareHouse = 50;//in our case it must be same as numberOfPharmacy
 		int numberOfMedicine = 25;
 		
-		int numberOf_sum_of_products= numberOfMedicine * numberOfPharmacy * numberOfWareHouse;//Eczane sayisi x ilac sayisi//minimize 3 sigma//sutun=eczane*eczane*ilac
-		int numberOf_right_side_of_equations = (numberOfWareHouse + numberOfPharmacy) * numberOfMedicine;//edges, equations Eczane sayisi x ilac sayisi//satir=eczane*ilac
+		int numberOf_sum_of_products= numberOfMedicine * numberOfPharmacy * numberOfWareHouse;
+		int numberOf_right_side_of_equations = (numberOfWareHouse + numberOfPharmacy) * numberOfMedicine;
 		
 //		System.out.println("numberOf_sum_of_products=" + numberOf_sum_of_products);
 //		System.out.println("numberOf_right_side_of_equations=" + numberOf_right_side_of_equations);
